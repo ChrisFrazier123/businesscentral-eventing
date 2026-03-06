@@ -64,7 +64,7 @@ codeunit 50901 "CF Event Worker"
 
     begin
         Outbox.Reset();
-        Outbox.SetFilter(Status, '%1|%3', "CF Event Status"::New, "CF Event Status"::Failed);
+        Outbox.SetFilter(Status, '%1|%2', "CF Event Status"::New, "CF Event Status"::Failed);
         exit(not Outbox.IsEmpty);
     end;
 
@@ -108,7 +108,7 @@ codeunit 50901 "CF Event Worker"
         BatchLimit := 20;
 
         Outbox.Reset();
-        Outbox.SetFilter(Status, '%1|%3', "CF Event Status"::New, "CF Event Status"::Failed);
+        Outbox.SetFilter(Status, '%1|%2', "CF Event Status"::New, "CF Event Status"::Failed);
         if Outbox.FindSet() then begin
             repeat
                 Outbox.Validate(Status, "CF Event Status"::"In Process");
@@ -120,22 +120,59 @@ codeunit 50901 "CF Event Worker"
 
 
     local procedure OutboxToJson(Outbox: Record "CF Event Outbox"): JsonToken
+    var
+        JObject: JsonObject;
+        JToken: JsonToken;
     begin
-        // TO DO
+        JObject.Add('id', Format(Outbox."Message Id"));
+        JObject.Add('type', Outbox."Event");
+        JObject.Add('version', Outbox.Version);
+        JObject.Add('domain', Outbox.Domain);
+        JObject.Add('environment', Outbox.Environment);
+        JObject.Add('companyId', Format(Outbox."Company Id"));
+        JObject.Add('eventOn', Format(Outbox."Event On", 0, 9));
+        JObject.Add('systemId', Format(Outbox."System Id"));
+        JObject.Add('recordId', Format(Outbox."Record Id", 0, 9));
+        JObject.AsToken(JToken);
+        exit(JToken);
     end;
 
 
     local procedure SendEvents(JArray: JsonArray): Boolean
     begin
-        // TO DO
         exit(TrySendEvents(JArray));
     end;
 
 
     [TryFunction]
     local procedure TrySendEvents(JArray: JsonArray)
+    var
+        Client: HttpClient;
+        RequestMessage: HttpRequestMessage;
+        ResponseMessage: HttpResponseMessage;
+        Content: HttpContent;
+        Headers: HttpHeaders;
+        JText: Text;
     begin
-        // TO DO
+        JArray.WriteTo(JText);
+        Content.WriteFrom(JText);
+        Content.GetHeaders(Headers);
+        Headers.Remove('Content-Type');
+        Headers.Add('Content-Type', 'application/json');
+
+        RequestMessage.Method := 'POST';
+        RequestMessage.SetRequestUri(EventingSetup."Base URL");
+        RequestMessage.Content := Content;
+
+        RequestMessage.GetHeaders(Headers);
+        Headers.Add('x-api-key', EventingSetup."API Key");
+
+        Client.Send(RequestMessage, ResponseMessage);
+
+        if not ResponseMessage.IsSuccessStatusCode() then begin
+            ResponseMessage.Content.ReadAs(JText);
+            Error('Failed to send events. Status: %1\%2', ResponseMessage.HttpStatusCode(), JText);
+        end;
     end;
 
 

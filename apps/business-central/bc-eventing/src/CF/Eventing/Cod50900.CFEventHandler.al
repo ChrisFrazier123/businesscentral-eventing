@@ -19,7 +19,6 @@ codeunit 50900 "CF Event Handler"
 
     var
         Outbox: Record "CF Event Outbox";
-        OutboxState: Record "CF Event Outbox State";
         Handled: Boolean;
 
     begin
@@ -66,7 +65,7 @@ codeunit 50900 "CF Event Handler"
         if Handled then
             exit;
 
-        TaskScheduler.CreateTask(Codeunit::"CF Event Handler", 0, true);
+        TaskScheduler.CreateTask(Codeunit::"CF Event Worker", 0, true);
     end;
 
 

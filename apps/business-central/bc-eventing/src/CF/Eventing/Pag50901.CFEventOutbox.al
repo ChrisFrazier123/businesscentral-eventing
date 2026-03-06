@@ -7,6 +7,9 @@ page 50901 "CF Event Outbox"
     PageType = List;
     SourceTable = "CF Event Outbox";
     UsageCategory = Administration;
+    DeleteAllowed = false;
+    InsertAllowed = false;
+    ModifyAllowed = false;
 
     layout
     {
