@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {          
+            "name": "DK_DEV",
+            "request": "launch",
+            "type": "al",
+            "tenant": "1a41b96d-457d-41ac-94ef-22d1901a7556",
+            "environmentType": "Sandbox",
+            "environmentName": "dk_dev",
+            "breakOnError": "ExcludeTry",
+            "launchBrowser": true,
+            "enableLongRunningSqlStatements": true,
+            "enableSqlInformationDebugger": true
+        }
+    ]
+}

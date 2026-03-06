@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "apps/business-central/bc-eventing"
+		}
+	],
+	"settings": {
+		"al.codeAnalyzers": [
+			"${AppSourceCop}",
+			"${CodeCop}",
+			"${PerTenantExtensionCop}"
+		],
+		"CRS.ObjectNamePrefix": "CF ",
+		"CRS.OnSaveAlFileAction": "Reorganize",
+		"CRS.FileNamePattern": "<ObjectTypeShort><ObjectId>.<ObjectNameShort>.al",
+		"CRS.ReorganizeByNamespace": false
+	}
+}

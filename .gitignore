@@ -1,0 +1,39 @@
+############################################
+# Visual Studio
+############################################
+.vs/
+
+############################################
+# VS Code
+############################################
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+############################################
+# .NET / Azure Functions
+############################################
+bin/
+obj/
+out/
+TestResults/
+
+*.dll
+*.exe
+*.pdb
+
+############################################
+# Azure Functions local config (SECRETS)
+############################################
+local.settings.json
+
+############################################
+# Business Central AL
+############################################
+.alpackages/
+*.app
+*.g.xlf
+*.lcl.xlf
+.vscode/.alcache

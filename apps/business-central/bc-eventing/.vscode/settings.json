@@ -1,0 +1,8 @@
+{
+    "CRS.NamespacePrefixToIgnore": "",
+    "ATS.RootNamespace": "CF.BI.API.V1",
+    "ATS.DefaultNamespaces": [
+        "CF.BI.API.V1"
+    ],
+    "CRS.ReorganizeByNamespace": true
+}
