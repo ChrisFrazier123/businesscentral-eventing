@@ -1,6 +1,6 @@
 namespace CF.Eventing;
 
-enum 50900 "CF Event Status"
+enum 50900 "Event Status"
 {
 
     value(0; New)

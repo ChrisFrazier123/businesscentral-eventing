@@ -1,10 +1,10 @@
 namespace CF.Eventing;
 
-page 50900 "CF Eventing Setup"
+page 50900 "Eventing Setup"
 {
     Caption = 'Eventing Setup';
     PageType = Card;
-    SourceTable = "CF Eventing Setup";
+    SourceTable = "Eventing Setup";
     DeleteAllowed = false;
     InsertAllowed = false;
     UsageCategory = Administration;
@@ -56,7 +56,7 @@ page 50900 "CF Eventing Setup"
                 PromotedOnly = true;
                 Image = Log;
                 ToolTip = 'Event Logs';
-                RunObject = page "CF Event Outbox";
+                RunObject = page "Event Outbox";
             }
         }
     }

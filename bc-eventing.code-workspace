@@ -10,9 +10,13 @@
 			"${CodeCop}",
 			"${PerTenantExtensionCop}"
 		],
-		"CRS.ObjectNamePrefix": "CF ",
-		"CRS.OnSaveAlFileAction": "Reorganize",
-		"CRS.FileNamePattern": "<ObjectTypeShort><ObjectId>.<ObjectNameShort>.al",
-		"CRS.ReorganizeByNamespace": false
+		"CRS.ObjectNamePrefix": "",
+		"CRS.ExtensionObjectNamePattern": "",
+		"CRS.OnSaveAlFileAction": "Rename",
+		"CRS.FileNamePattern": "<ObjectNameShort>.<ObjectTypeShort><ObjectId>.al",
+		"CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectTypeShort><BaseId>-<ObjectId>.al",
+		"CRS.FileNamePatternPageCustomizations": "<ObjectNameShort>.<ObjectTypeShort><BaseId>-<ObjectId>.al",
+		"CRS.ReorganizeByNamespace": false,
+		"CRS.RemovePrefixFromFilename": true
 	}
 }

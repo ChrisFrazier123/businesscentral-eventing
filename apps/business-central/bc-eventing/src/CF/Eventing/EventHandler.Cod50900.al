@@ -1,6 +1,6 @@
 namespace CF.Eventing;
 
-codeunit 50900 "CF Event Handler"
+codeunit 50900 "Event Handler"
 {
     procedure Init()
     begin
@@ -13,13 +13,12 @@ codeunit 50900 "CF Event Handler"
 
     procedure LogEvent(
         Domain: Text[50];
-        EventType: Enum "CF Event Type";
+        EventType: Enum "Event Type";
         SystemId: Guid;
         RecordId: RecordId)
 
     var
-        Outbox: Record "CF Event Outbox";
-        OutboxState: Record "CF Event Outbox State";
+        Outbox: Record "Event Outbox";
         Handled: Boolean;
 
     begin
@@ -36,7 +35,7 @@ codeunit 50900 "CF Event Handler"
         Outbox.Validate(Domain, Domain);
         Outbox.Validate("Event", StrSubstNo('BC.%1:%2', Domain, Format(EventType)));
         Outbox.Validate(Version, 'v1');
-        Outbox.Validate(Status, "CF Event Status"::New);
+        Outbox.Validate(Status, "Event Status"::New);
         Outbox.Validate(Environment, '');
         Outbox.Validate("Company Id", CompanyProperty.ID());
         Outbox.Validate("Event On", CurrentDateTime());
@@ -48,25 +47,25 @@ codeunit 50900 "CF Event Handler"
     end;
 
 
-    local procedure TryStartWorker()
+    procedure TryStartWorker()
     var
-        OutboxState: Record "CF Event Outbox State";
+        Outbox: Record "Event Outbox";
+        OutboxState: Record "Event Outbox State";
         Handled: Boolean;
 
     begin
-        OutboxState.LockTable();
-        OutboxState.SafeGet();
-        if OutboxState.Status = "CF Event Status"::"In Process" then
+        Init();
+        if not Outbox.HasWorkToProcess() then
             exit;
 
-        OutboxState.Validate(Status, "CF Event Status"::"In Process");
-        OutboxState.Modify();
+        if not OutboxState.SetInProcess() then
+            exit;
 
         OnBeforeCreateWorkerTask(Handled);
         if Handled then
             exit;
 
-        TaskScheduler.CreateTask(Codeunit::"CF Event Handler", 0, true);
+        TaskScheduler.CreateTask(Codeunit::"Event Worker", 0, true);
     end;
 
 
@@ -83,6 +82,6 @@ codeunit 50900 "CF Event Handler"
 
 
     var
-        EventingSetup: Record "CF Eventing Setup";
+        EventingSetup: Record "Eventing Setup";
         IsInitialized: Boolean;
 }
