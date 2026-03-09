@@ -1,6 +1,6 @@
 namespace CF.Eventing;
 
-codeunit 50901 "CF Event Worker"
+codeunit 50901 "Event Worker"
 {
     trigger OnRun()
     begin
@@ -23,7 +23,7 @@ codeunit 50901 "CF Event Worker"
 
     local procedure HandleEvents()
     var
-        OutboxState: Record "CF Event Outbox State";
+        OutboxState: Record "Event Outbox State";
         Timeout: DateTime;
         Duration: Duration;
         Handled: Boolean;
@@ -60,47 +60,45 @@ codeunit 50901 "CF Event Worker"
 
     local procedure HasWorkToProcess(): Boolean
     var
-        Outbox: Record "CF Event Outbox";
+        Outbox: Record "Event Outbox";
 
     begin
         Outbox.Reset();
-        Outbox.SetFilter(Status, '%1|%2', "CF Event Status"::New, "CF Event Status"::Failed);
+        Outbox.SetFilter(Status, '%1|%2', "Event Status"::New, "Event Status"::Failed);
         exit(not Outbox.IsEmpty);
     end;
 
 
     local procedure HandleIteration()
     var
-        Outbox: Record "CF Event Outbox";
-        JToken: JsonToken;
+        Outbox: Record "Event Outbox";
+        JObject: JsonObject;
         JArray: JsonArray;
 
     begin
         SetBatchToInProcess();
 
         Outbox.Reset();
-        Outbox.SetRange(Status, "CF Event Status"::"In Process");
+        Outbox.SetRange(Status, "Event Status"::"In Process");
         if Outbox.FindSet() then begin
             repeat
-                JToken := OutboxToJson(Outbox);
-                if JToken.IsObject then begin
-                    JArray.Add(JToken);
-                end;
+                JObject := OutboxToJson(Outbox);
+                JArray.Add(JObject);
             until Outbox.Next() = 0;
         end;
 
         if JArray.Count > 0 then begin
             if SendEvents(JArray) then
-                Outbox.ModifyAll(Status, "CF Event Status"::Completed)
+                Outbox.ModifyAll(Status, "Event Status"::Completed)
             else
-                Outbox.ModifyAll(Status, "CF Event Status"::Failed);
+                Outbox.ModifyAll(Status, "Event Status"::Failed);
         end;
     end;
 
 
     local procedure SetBatchToInProcess()
     var
-        Outbox: Record "CF Event Outbox";
+        Outbox: Record "Event Outbox";
         i: Integer;
         BatchLimit: Integer;
 
@@ -108,10 +106,10 @@ codeunit 50901 "CF Event Worker"
         BatchLimit := 20;
 
         Outbox.Reset();
-        Outbox.SetFilter(Status, '%1|%2', "CF Event Status"::New, "CF Event Status"::Failed);
+        Outbox.SetFilter(Status, '%1|%2', "Event Status"::New, "Event Status"::Failed);
         if Outbox.FindSet() then begin
             repeat
-                Outbox.Validate(Status, "CF Event Status"::"In Process");
+                Outbox.Validate(Status, "Event Status"::"In Process");
                 Outbox.Modify();
                 i += 1;
             until (Outbox.Next() = 0) or (i >= BatchLimit);
@@ -119,22 +117,28 @@ codeunit 50901 "CF Event Worker"
     end;
 
 
-    local procedure OutboxToJson(Outbox: Record "CF Event Outbox"): JsonToken
+    local procedure OutboxToJson(Outbox: Record "Event Outbox"): JsonObject
     var
         JObject: JsonObject;
-        JToken: JsonToken;
+        messageJObject: JsonObject;
+        headersJObject: JsonObject;
+
     begin
-        JObject.Add('id', Format(Outbox."Message Id"));
-        JObject.Add('type', Outbox."Event");
+        JObject.Add('messageId', Format(Outbox."Message Id"));
+        JObject.Add('event', Outbox."Event");
         JObject.Add('version', Outbox.Version);
         JObject.Add('domain', Outbox.Domain);
-        JObject.Add('environment', Outbox.Environment);
-        JObject.Add('companyId', Format(Outbox."Company Id"));
-        JObject.Add('eventOn', Format(Outbox."Event On", 0, 9));
-        JObject.Add('systemId', Format(Outbox."System Id"));
-        JObject.Add('recordId', Format(Outbox."Record Id", 0, 9));
-        JObject.AsToken(JToken);
-        exit(JToken);
+
+        messageJObject.Add('systemId', Format(Outbox."System Id"));
+        messageJObject.Add('recordId', Format(Outbox."Record Id", 0, 9));
+        JObject.Add('message', messageJObject);
+
+        JObject.Add('timestamp', Format(Outbox."Event On", 0, 9));
+
+        headersJObject.Add('environment', Outbox.Environment);
+        headersJObject.Add('companyId', Format(Outbox."Company Id"));
+        JObject.Add('headers', headersJObject);
+        exit(JObject);
     end;
 
 
@@ -153,6 +157,7 @@ codeunit 50901 "CF Event Worker"
         Content: HttpContent;
         Headers: HttpHeaders;
         JText: Text;
+
     begin
         JArray.WriteTo(JText);
         Content.WriteFrom(JText);
@@ -183,6 +188,6 @@ codeunit 50901 "CF Event Worker"
 
 
     var
-        EventingSetup: Record "CF Eventing Setup";
+        EventingSetup: Record "Eventing Setup";
         IsInitialized: Boolean;
 }

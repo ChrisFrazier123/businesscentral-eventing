@@ -1,6 +1,6 @@
 namespace CF.Eventing;
 
-table 50902 "CF Event Outbox State"
+table 50902 "Event Outbox State"
 {
     Caption = 'Event Outbox State';
     DataClassification = SystemMetadata;
@@ -12,7 +12,7 @@ table 50902 "CF Event Outbox State"
             Caption = 'Code';
         }
 
-        field(2; Status; Enum "CF Event Status")
+        field(2; Status; Enum "Event Status")
         {
             Caption = 'Status';
         }
@@ -31,7 +31,7 @@ table 50902 "CF Event Outbox State"
         Rec.Reset();
         if not Rec.FindFirst() then begin
             Rec.Init();
-            Rec.Validate(Status, "CF Event Status"::New);
+            Rec.Validate(Status, "Event Status"::New);
             Rec.Insert();
         end;
     end;
@@ -40,7 +40,7 @@ table 50902 "CF Event Outbox State"
     begin
         Rec.LockTable();
         Rec.SafeGet();
-        Rec.Validate(Status, "CF Event Status"::Ready);
+        Rec.Validate(Status, "Event Status"::Ready);
         Rec.Modify(true);
     end;
 }

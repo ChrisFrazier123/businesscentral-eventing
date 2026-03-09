@@ -1,8 +1,8 @@
 namespace CF.Eventing;
 
-table 50900 "CF Eventing Setup"
+table 50900 "Eventing Setup"
 {
-    Caption = 'CF Eventing Setup';
+    Caption = 'Eventing Setup';
     DataClassification = CustomerContent;
 
     fields

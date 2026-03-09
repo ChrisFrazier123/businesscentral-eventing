@@ -1,6 +1,6 @@
 namespace CF.Eventing;
 
-enum 50901 "CF Event Type"
+enum 50901 "Event Type"
 {
     value(1; Inserted)
     {

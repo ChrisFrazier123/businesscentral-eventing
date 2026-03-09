@@ -1,8 +1,8 @@
 namespace CF.Eventing;
 
-table 50901 "CF Event Outbox"
+table 50901 "Event Outbox"
 {
-    Caption = 'CF Event Outbox';
+    Caption = 'Event Outbox';
     DataClassification = CustomerContent;
 
     fields
@@ -27,7 +27,7 @@ table 50901 "CF Event Outbox"
             Caption = 'Domain';
         }
 
-        field(10; Status; Enum "CF Event Status")
+        field(10; Status; Enum "Event Status")
         {
             Caption = 'Status';
         }

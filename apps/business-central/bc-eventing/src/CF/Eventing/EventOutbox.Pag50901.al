@@ -1,11 +1,11 @@
 namespace CF.Eventing;
 
-page 50901 "CF Event Outbox"
+page 50901 "Event Outbox"
 {
     ApplicationArea = All;
     Caption = 'Event Outbox';
     PageType = List;
-    SourceTable = "CF Event Outbox";
+    SourceTable = "Event Outbox";
     UsageCategory = Administration;
     DeleteAllowed = false;
     InsertAllowed = false;
