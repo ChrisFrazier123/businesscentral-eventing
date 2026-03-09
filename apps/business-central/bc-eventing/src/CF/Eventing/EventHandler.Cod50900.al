@@ -15,11 +15,13 @@ codeunit 50900 "Event Handler"
         Domain: Text[50];
         EventType: Enum "Event Type";
         SystemId: Guid;
-        RecordId: RecordId)
+        Message: JsonObject)
 
     var
         Outbox: Record "Event Outbox";
         Handled: Boolean;
+        OStream: OutStream;
+        MessageString: Text;
 
     begin
         Init();
@@ -40,7 +42,10 @@ codeunit 50900 "Event Handler"
         Outbox.Validate("Company Id", CompanyProperty.ID());
         Outbox.Validate("Event On", CurrentDateTime());
         Outbox.Validate("System Id", SystemId);
-        Outbox.Validate("Record Id", RecordId);
+
+        Outbox.Message.CreateOutStream(OStream);
+        Message.WriteTo(OStream);
+
         Outbox.Insert();
 
         TryStartWorker();

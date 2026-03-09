@@ -52,9 +52,9 @@ table 50901 "Event Outbox"
             Caption = 'System Id';
         }
 
-        field(41; "Record Id"; RecordId)
+        field(50; "Message"; Blob)
         {
-            Caption = 'Record Id';
+            Caption = 'Message';
         }
     }
 

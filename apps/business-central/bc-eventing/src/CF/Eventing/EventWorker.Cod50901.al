@@ -112,17 +112,18 @@ codeunit 50901 "Event Worker"
         JObject: JsonObject;
         messageJObject: JsonObject;
         headersJObject: JsonObject;
+        IStream: InStream;
 
     begin
+        Outbox.Message.CreateInStream(IStream);
+        messageJObject.ReadFrom(IStream);
+
         JObject.Add('messageId', Format(Outbox."Message Id"));
         JObject.Add('event', Outbox."Event");
         JObject.Add('version', Outbox.Version);
         JObject.Add('domain', Outbox.Domain);
 
-        messageJObject.Add('systemId', Format(Outbox."System Id"));
-        messageJObject.Add('recordId', Format(Outbox."Record Id", 0, 9));
         JObject.Add('message', messageJObject);
-
         JObject.Add('timestamp', Format(Outbox."Event On", 0, 9));
 
         headersJObject.Add('environment', Outbox.Environment);

@@ -13,7 +13,7 @@ codeunit 50910 "GLAccount Events"
     begin
         if Rec.IsTemporary() then
             exit;
-        EventHandler.LogEvent('GeneralLedger', "Event Type"::Inserted, Rec.SystemId, Rec.RecordId);
+        EventHandler.LogEvent('GeneralLedger', "Event Type"::Inserted, Rec.SystemId, GlAccountToJson(Rec));
     end;
 
 
@@ -25,7 +25,7 @@ codeunit 50910 "GLAccount Events"
     begin
         if Rec.IsTemporary() then
             exit;
-        EventHandler.LogEvent('GeneralLedger', "Event Type"::Modified, Rec.SystemId, Rec.RecordId);
+        EventHandler.LogEvent('GeneralLedger', "Event Type"::Modified, Rec.SystemId, GlAccountToJson(Rec));
     end;
 
 
@@ -37,7 +37,7 @@ codeunit 50910 "GLAccount Events"
     begin
         if Rec.IsTemporary() then
             exit;
-        EventHandler.LogEvent('GeneralLedger', "Event Type"::Deleted, Rec.SystemId, Rec.RecordId);
+        EventHandler.LogEvent('GeneralLedger', "Event Type"::Deleted, Rec.SystemId, GlAccountToJson(Rec));
     end;
 
 
@@ -49,6 +49,17 @@ codeunit 50910 "GLAccount Events"
     begin
         if Rec.IsTemporary() then
             exit;
-        EventHandler.LogEvent('GeneralLedger', "Event Type"::Renamed, Rec.SystemId, Rec.RecordId);
+        EventHandler.LogEvent('GeneralLedger', "Event Type"::Renamed, Rec.SystemId, GlAccountToJson(Rec));
+    end;
+
+
+    local procedure GlAccountToJson(GLAccount: Record "G/L Account"): JsonObject
+    var
+        Response: JsonObject;
+
+    begin
+        Response.Add('systemId', GLAccount.SystemId);
+        Response.Add('number', GLAccount."No.");
+        Response.Add('name', GLAccount.Name);
     end;
 }

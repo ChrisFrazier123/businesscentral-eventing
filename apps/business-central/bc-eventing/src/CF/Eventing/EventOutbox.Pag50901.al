@@ -61,11 +61,14 @@ page 50901 "Event Outbox"
                 {
                     ToolTip = 'Specifies the value of the System Id field.', Comment = '%';
                 }
+            }
+        }
 
-                field("Record Id"; Rec."Record Id")
-                {
-                    ToolTip = 'Specifies the value of the Record Id field.', Comment = '%';
-                }
+        area(FactBoxes)
+        {
+            part(JsonRequestViewer; "Json Viewer Factbox")
+            {
+                ApplicationArea = All;
             }
         }
     }
