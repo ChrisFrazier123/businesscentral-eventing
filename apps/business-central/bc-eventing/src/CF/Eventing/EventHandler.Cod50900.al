@@ -69,12 +69,6 @@ codeunit 50900 "Event Handler"
     end;
 
 
-    local procedure HasWork(): Boolean
-    begin
-
-    end;
-
-
     [IntegrationEvent(false, false)]
     procedure OnBeforeLogEvent(var Handled: Boolean)
     begin

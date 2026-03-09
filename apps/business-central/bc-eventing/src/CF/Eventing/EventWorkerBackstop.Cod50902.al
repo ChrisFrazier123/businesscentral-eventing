@@ -11,7 +11,7 @@ codeunit 50902 "Event Worker Backstop"
     var
         Outbox: Record "Event Outbox";
         OutboxState: Record "Event Outbox State";
-        EventWorkser: Codeunit "Event Worker";
+        EventWorker: Codeunit "Event Worker";
 
     begin
         if not Outbox.HasWorkToProcess() then
@@ -20,7 +20,7 @@ codeunit 50902 "Event Worker Backstop"
         if not OutboxState.SetInProcess() then
             exit;
 
-        if not EventWorkser.Run() then begin
+        if not EventWorker.Run() then begin
             OutboxState.SetReady();
         end;
     end;
