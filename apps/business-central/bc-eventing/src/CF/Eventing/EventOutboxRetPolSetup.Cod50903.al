@@ -11,7 +11,10 @@ codeunit 50903 "Event Outbox Ret. Pol. Setup"
     var
         RetenPolAllowedTables: Codeunit "Reten. Pol. Allowed Tables";
         EventOutbox: Record "Event Outbox";
+        RecRef: RecordRef;
     begin
-        RetenPolAllowedTables.AddAllowedTable(Database::"Event Outbox", EventOutbox.FieldNo("Event On"));
+        EventOutbox.SetRange(Status, "Event Status"::Completed);
+        RecRef.GetTable(EventOutbox);
+        RetenPolAllowedTables.AddAllowedTable(Database::"Event Outbox", EventOutbox.FieldNo("Event On"), Enum::"Retention Period Enum"::"Never Delete", false, RecRef.GetView());
     end;
 }
