@@ -59,12 +59,6 @@ codeunit 50901 "Event Worker"
     end;
 
 
-    procedure SetState()
-    begin
-
-    end;
-
-
     local procedure HandleIteration()
     var
         Outbox: Record "Event Outbox";
