@@ -125,9 +125,9 @@ page 50902 "Json Viewer Factbox"
         //colAt: Collapse at level, where 0..n, -1 unlimited
 
         if QueryDirection = QueryDirection::Request then
-            CurrPage.JsonViewer.LoadDocument(JObjectRequest, -1, 1)
+            CurrPage.JsonViewer.LoadDocument(JObjectRequest, -1, -1)
         else
-            CurrPage.JsonViewer.LoadDocument(JObjectResponse, -1, 1);
+            CurrPage.JsonViewer.LoadDocument(JObjectResponse, -1, -1);
     end;
 
     procedure SetContent(lIStreamRequest: InStream; lIStreamResponse: InStream)
