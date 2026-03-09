@@ -36,11 +36,25 @@ table 50902 "Event Outbox State"
         end;
     end;
 
+
+    procedure SetInProcess(): Boolean
+    begin
+        Rec.LockTable();
+        Rec.SafeGet();
+        if Rec.Status = "Event Status"::"In Process" then
+            exit(false);
+
+        Rec.Validate(Status, "Event Status"::"In Process");
+        Rec.Modify();
+        exit(true);
+    end;
+
+
     procedure SetReady()
     begin
         Rec.LockTable();
         Rec.SafeGet();
         Rec.Validate(Status, "Event Status"::Ready);
-        Rec.Modify(true);
+        Rec.Modify();
     end;
 }

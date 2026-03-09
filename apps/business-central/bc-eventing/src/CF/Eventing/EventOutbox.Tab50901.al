@@ -70,4 +70,11 @@ table 50901 "Event Outbox"
 
         }
     }
+
+    procedure HasWorkToProcess(): Boolean
+    begin
+        Rec.Reset();
+        Rec.SetFilter(Status, '%1|%2', "Event Status"::New, "Event Status"::Failed);
+        exit(not Rec.IsEmpty);
+    end;
 }

@@ -23,6 +23,7 @@ codeunit 50901 "Event Worker"
 
     local procedure HandleEvents()
     var
+        Outbox: Record "Event Outbox";
         OutboxState: Record "Event Outbox State";
         Timeout: DateTime;
         Duration: Duration;
@@ -42,13 +43,13 @@ codeunit 50901 "Event Worker"
 
         Sleep(10 * 1000);
         while CurrentDateTime() <= Timeout do begin
-            if HasWorkToProcess() then begin
+            if Outbox.HasWorkToProcess() then begin
                 HandleIteration();
                 continue;
             end;
 
             Sleep(60 * 1000);
-            if not HasWorkToProcess() then begin
+            if not Outbox.HasWorkToProcess() then begin
                 OutboxState.SetReady();
                 exit;
             end;
@@ -58,14 +59,9 @@ codeunit 50901 "Event Worker"
     end;
 
 
-    local procedure HasWorkToProcess(): Boolean
-    var
-        Outbox: Record "Event Outbox";
-
+    procedure SetState()
     begin
-        Outbox.Reset();
-        Outbox.SetFilter(Status, '%1|%2', "Event Status"::New, "Event Status"::Failed);
-        exit(not Outbox.IsEmpty);
+
     end;
 
 

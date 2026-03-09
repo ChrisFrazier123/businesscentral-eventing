@@ -47,25 +47,31 @@ codeunit 50900 "Event Handler"
     end;
 
 
-    local procedure TryStartWorker()
+    procedure TryStartWorker()
     var
+        Outbox: Record "Event Outbox";
         OutboxState: Record "Event Outbox State";
         Handled: Boolean;
 
     begin
-        OutboxState.LockTable();
-        OutboxState.SafeGet();
-        if OutboxState.Status = "Event Status"::"In Process" then
+        Init();
+        if not Outbox.HasWorkToProcess() then
             exit;
 
-        OutboxState.Validate(Status, "Event Status"::"In Process");
-        OutboxState.Modify();
+        if not OutboxState.SetInProcess() then
+            exit;
 
         OnBeforeCreateWorkerTask(Handled);
         if Handled then
             exit;
 
         TaskScheduler.CreateTask(Codeunit::"Event Worker", 0, true);
+    end;
+
+
+    local procedure HasWork(): Boolean
+    begin
+
     end;
 
 
